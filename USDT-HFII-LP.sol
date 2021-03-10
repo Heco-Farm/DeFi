@@ -701,9 +701,9 @@ contract LPTokenSharePool is
     LPTokenWrapper
 {
     IERC20 public HFII;
-    uint256 public constant DURATION = 300 days;
+    uint256 public constant DURATION = 30 days;
 
-    uint256 public initreward = 8000 * 10**18;
+    uint256 public initreward = 800 * 10**18;
     uint256 public starttime;
     uint256 public periodFinish;
     uint256 public rewardRate = initreward.div(DURATION);
@@ -736,7 +736,7 @@ contract LPTokenSharePool is
     }
 
     modifier updateReward(address account) {
-        if(starttime != 0){
+        if(starttime != 0 && starttime <= block.timestamp){  
             rewardPerTokenStored = rewardPerToken();
             lastUpdateTime = lastTimeRewardApplicable();
             if (account != address(0)) {
@@ -817,7 +817,8 @@ contract LPTokenSharePool is
             emit RewardPaid(msg.sender, reward);
         }
     }
-
+    
+ 
     modifier checkStart() {
         require(block.timestamp >= starttime, 'not start');
         _;
